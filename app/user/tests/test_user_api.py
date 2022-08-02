@@ -1,8 +1,6 @@
 """
-Test for the user API.
+Tests for the user API.
 """
-import email
-from venv import create
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.urls import reverse
@@ -46,14 +44,14 @@ class PublicUserApiTests(TestCase):
         payload = {
             'email': 'test@example.com',
             'password': 'testpass123',
-            'name': 'Test Name',
+            'name': 'Test name',
         }
         create_user(**payload)
         res = self.client.post(CREATE_USER_URL, payload)
 
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_password_to_short_error(self):
+    def test_password_too_short_error(self):
         """Test an error is returned if password less than 5 chars."""
         payload = {
             'email': 'test@example.com',
@@ -87,7 +85,7 @@ class PublicUserApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
     def test_create_token_bad_credentials(self):
-        """Test returns error if credentials is invalid."""
+        """Test returns error if credentials invalid."""
         create_user(email='test@example.com', password='goodpass')
 
         payload = {'email': 'test@example.com', 'password': 'badpass'}
@@ -98,7 +96,7 @@ class PublicUserApiTests(TestCase):
 
     def test_create_token_blank_password(self):
         """Test posting a blank password return an error."""
-        payload = {'email': 'text@example.com', 'password': ''}
+        payload = {'email': 'test@example.com', 'password': ''}
         res = self.client.post(TOKEN_URL, payload)
 
         self.assertNotIn('token', res.data)
